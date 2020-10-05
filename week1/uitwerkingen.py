@@ -19,7 +19,8 @@ def drawGraph(data):
     # roteren (waarom?).
     # Maak gebruik van pytplot.scatter om dit voor elkaar te krijgen.
 
-    #YOUR CODE HERE
+    data = data.transpose()
+    plt.scatter(data[0], data[1])
     pass
 
 
@@ -44,15 +45,19 @@ def computeCost(X, y, theta):
     #    4. kwadrateer dit verschil
     #    5. tal al deze kwadraten bij elkaar op en deel dit door twee keer het aantal datapunten
 
-    J = 0
+    J = 0  # sum_squared_error
+    aantal_datapunten, n = X.shape
+    for i in range(aantal_datapunten):
+        h = np.dot(theta.transpose(), X[i])    # in de widkunde zou * bij matricies automatisch het dot prodct betekenen maar in numpy is de standaard: element wise multiplication 
+        verschil_squared = pow(h - y[i], 2)
+        J += verschil_squared
+    
+    J /= (2*aantal_datapunten)
+    return J[0]
 
-    # YOUR CODE HERE
-
-    return J
 
 
-
-def gradientDescent(X, y, theta, alpha, num_iters):
+def gradientDescent(X, y, thetaT, alpha, num_iters):
     #OPGAVE 3
     # In deze opgave wordt elke parameter van theta num_iter keer geüpdate om de optimale waarden
     # voor deze parameters te vinden. Per iteratie moet je alle parameters van theta update.
@@ -70,14 +75,20 @@ def gradientDescent(X, y, theta, alpha, num_iters):
     #   4. update de i-de parameter van theta, namelijk door deze te verminderen met
     #      alpha keer het gemiddelde van de som van de vermenigvuldiging uit 3
 
-    m,n = X.shape
+    for iteration in range(num_iters):
+        for j in range(thetaT.shape[1]): # de J en I loops kunnen nog slimmer gecombineerd worden maar dat gaf steeds errors op basis van de uitleg in het eerste college
+            sumation = 0 
+            m, _ = X.shape
+            for i in range(m):
+                h = np.dot(thetaT, X[i]) 
+                verschil = (h - y[i])
+                sumation += verschil * X[i][j]
+            
+            sumation /= m
 
-    # YOUR CODE HERE
+            thetaT[0][j] = thetaT[0][j] - alpha * sumation
 
-    # aan het eind van deze loop retourneren we de nieuwe waarde van theta
-    # (wat is de dimensionaliteit van theta op dit moment?).
-
-    return theta
+    return thetaT
 
 def contourPlot(X, y):
     #OPGAVE 4
@@ -97,9 +108,11 @@ def contourPlot(X, y):
     t2 = np.linspace(-1, 4, 100)
     T1, T2 = np.meshgrid(t1, t2)
 
-    J_vals = np.zeros( (len(t2), len(t2)) )
+    J_vals = np.zeros( (len(t1), len(t2)) )
 
-    #YOUR CODE HERE 
+    for i, theta_0 in enumerate(t1):
+        for j, theta_1 in enumerate(t2):
+            J_vals[i][j] = computeCost(X, y, np.array([[theta_0],[theta_1]]))
 
     surf = ax.plot_surface(T1, T2, J_vals, rstride=1, cstride=1, cmap=cm.coolwarm, linewidth=0, antialiased=False)
 
