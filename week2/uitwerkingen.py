@@ -9,8 +9,9 @@ def plotNumber(nrVector):
     # laatste index het langzaamst; als je dat niet doet, wordt het plaatje 
     # gespiegeld en geroteerd. Zie de documentatie op 
     # https://docs.scipy.org/doc/numpy/reference/generated/numpy.reshape.html
-
-    pass
+    img = nrVector.reshape(20, 20, order="F") # F = Fortran indexing this is placing a 2d array as verticle strips under each other
+    plt.matshow(img)
+    plt.show()
 
 # ==== OPGAVE 2a ====
 def sigmoid(z):
@@ -18,12 +19,11 @@ def sigmoid(z):
     # voor dat de code zowel werkt wanneer z een getal is als wanneer z een
     # vector is.
     # Maak gebruik van de methode exp() in NumPy.
-
-    pass
+    return 1 / (1 + np.exp(-z))
 
 
 # ==== OPGAVE 2b ====
-def get_y_matrix(y, m):
+def get_y_matrix(y, m, matrix_width=10):
     # Gegeven een vector met waarden y_i van 1...x, retourneer een (ijle) matrix
     # van m×x met een 1 op positie y_i en een 0 op de overige posities.
     # Let op: de gegeven vector y is 1-based en de gevraagde matrix is 0-based,
@@ -31,8 +31,11 @@ def get_y_matrix(y, m):
     # y_i=10, dan is regel i in de matrix [0,0,...1] (in dit geval is de breedte
     # van de matrix 10 (0-9), maar de methode moet werken voor elke waarde van 
     # y en m
-
-    pass 
+    ymatrix = np.zeros((m, matrix_width))
+    for i, ei in enumerate(y):
+        ymatrix[i][ei % matrix_width] = 1  # getal 0 wordt aangegeven met het getal 10 dus we draaien dat weer terug
+    
+    return  ymatrix
 
 
 # ==== OPGAVE 2c ==== 
