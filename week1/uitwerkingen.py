@@ -25,7 +25,7 @@ def drawGraph(data):
 
 
 
-def computeCost(X, y, theta):
+def computeCost(X, y, theta, vectorieel = True):
     #OPGAVE 2
     # Deze methode berekent de kosten van de huidige waarden van theta, dat wil zeggen de mate waarin de
     # voorspelling (gegeven de specifieke waarde van theta) correspondeert met de werkelijke waarde (die
@@ -44,20 +44,30 @@ def computeCost(X, y, theta):
     #    3. bereken het verschil tussen deze voorspelling en de werkelijke waarde
     #    4. kwadrateer dit verschil
     #    5. tal al deze kwadraten bij elkaar op en deel dit door twee keer het aantal datapunten
-
-    J = 0  # sum_squared_error
-    aantal_datapunten, n = X.shape
-    for i in range(aantal_datapunten):
-        h = np.dot(theta.transpose(), X[i])    # in de widkunde zou * bij matricies automatisch het dot prodct betekenen maar in numpy is de standaard: element wise multiplication 
-        verschil_squared = pow(h - y[i], 2)
-        J += verschil_squared
     
-    J /= (2*aantal_datapunten)
-    return J[0]
+    if vectorieel:
+        aantal_datapunten, n = X.shape
+        voorspelling = X @ theta
+        verschil = voorspelling - y
+        verschil_kwadraat = np.square(verschil);
+        J = np.sum(verschil_kwadraat) / (2* aantal_datapunten)
+        return J
+    
+
+    else: # Imperative
+        J = 0  # sum_squared_error
+        aantal_datapunten, n = X.shape
+        for i in range(aantal_datapunten):
+            h = np.dot(theta.transpose(), X[i])    # in de widkunde zou * bij matricies automatisch het dot prodct betekenen maar in numpy is de standaard: element wise multiplication 
+            verschil_squared = pow(h - y[i], 2)
+            J += verschil_squared
+        
+        J /= (2*aantal_datapunten)
+        return J[0]
 
 
 
-def gradientDescent(X, y, thetaT, alpha, num_iters):
+def gradientDescent(X, y, thetaT, alpha, num_iters, vectorieel = True):
     #OPGAVE 3
     # In deze opgave wordt elke parameter van theta num_iter keer geüpdate om de optimale waarden
     # voor deze parameters te vinden. Per iteratie moet je alle parameters van theta update.
@@ -75,20 +85,29 @@ def gradientDescent(X, y, thetaT, alpha, num_iters):
     #   4. update de i-de parameter van theta, namelijk door deze te verminderen met
     #      alpha keer het gemiddelde van de som van de vermenigvuldiging uit 3
 
-    for iteration in range(num_iters):
-        for j in range(thetaT.shape[1]): # de J en I loops kunnen nog slimmer gecombineerd worden maar dat gaf steeds errors op basis van de uitleg in het eerste college
-            sumation = 0 
-            m, _ = X.shape
-            for i in range(m):
-                h = np.dot(thetaT, X[i]) 
-                verschil = (h - y[i])
-                sumation += verschil * X[i][j]
-            
-            sumation /= m
+    if vectorieel:
+        # TODO: deze is heel simpel, misschien, heel misschien, waarschijnlijk niet
+        return -1
 
-            thetaT[0][j] = thetaT[0][j] - alpha * sumation
 
-    return thetaT
+    else: # Imperative
+
+        for _ in range(num_iters):
+            for j in range(thetaT.shape[1]): # de J en I loops kunnen nog slimmer gecombineerd worden maar dat gaf steeds errors op basis van de uitleg in het eerste college
+                sumation = 0 
+                m, _ = X.shape
+                for i in range(m):
+                    h = np.dot(thetaT, X[i]) 
+                    verschil = (h - y[i])
+                    sumation += verschil * X[i][j]
+                
+                sumation /= m
+
+                thetaT[0][j] = thetaT[0][j] - alpha * sumation
+
+        return thetaT
+
+
 
 def contourPlot(X, y):
     #OPGAVE 4
