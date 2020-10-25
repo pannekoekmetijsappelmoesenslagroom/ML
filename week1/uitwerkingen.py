@@ -86,8 +86,18 @@ def gradientDescent(X, y, thetaT, alpha, num_iters, vectorieel = True):
     #      alpha keer het gemiddelde van de som van de vermenigvuldiging uit 3
 
     if vectorieel:
-        # TODO: deze is heel simpel, misschien, heel misschien, waarschijnlijk niet
-        return -1
+        for _ in range(num_iters):
+            sumation = 0 
+            m, _ = X.shape
+            h = X @ thetaT.transpose()
+            verschil = (h - y)
+            sumation += verschil.transpose() @ X
+            
+            sumation /= m
+
+            thetaT = thetaT - alpha * sumation
+
+        return thetaT
 
 
     else: # Imperative
