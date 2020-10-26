@@ -48,7 +48,7 @@ def nnCostFunction(Thetas, X, y):
 
 
 #Laden van de data en zetten van de variabelen.
-with open ('week2_data.pkl','rb') as f:
+with open ('/home/sneeuwpop/Github/HANZE/periode_4-1/ML/week2/week2_data.pkl','rb') as f:
     data = pickle.load(f)
 
 X,y = data['X'], data['y']
@@ -137,29 +137,29 @@ input ("Druk op Return om verder te gaan...")
 
 # ========================  OPGAVE 4 ======================== 
 
-init_params = np.concatenate( (Theta1.flatten(), Theta2.flatten()) )
-args = ( X, y)
-print ("")
-print ("Gebruik scipy.optimize.minimize om het netwerk te trainen...")
-res = minimize(nnCostFunction, init_params, args=args, method='CG', callback=callbackF, jac=True, options={'maxiter':30,'disp':True})
-size = hidden_layer_size * (input_layer_size+1) #voor de bias-node die wel in de matrix zit maar niet geplot moet worden
-res_Theta1 = res['x'][:size].reshape(hidden_layer_size, input_layer_size+1)
-res_Theta2 = res['x'][size:].reshape(num_labels, hidden_layer_size+1)
+# init_params = np.concatenate( (Theta1.flatten(), Theta2.flatten()) )
+# args = ( X, y)
+# print ("")
+# print ("Gebruik scipy.optimize.minimize om het netwerk te trainen...")
+# res = minimize(nnCostFunction, init_params, args=args, method='CG', callback=callbackF, jac=True, options={'maxiter':30,'disp':True})
+# size = hidden_layer_size * (input_layer_size+1) #voor de bias-node die wel in de matrix zit maar niet geplot moet worden
+# res_Theta1 = res['x'][:size].reshape(hidden_layer_size, input_layer_size+1)
+# res_Theta2 = res['x'][size:].reshape(num_labels, hidden_layer_size+1)
 
-print ("Training compleet. ")
-cost = computeCost(res_Theta1, res_Theta2, X, y)
-print ("De totale kost is nu {}".format(cost))
+# print ("Training compleet. ")
+# cost = computeCost(res_Theta1, res_Theta2, X, y)
+# print ("De totale kost is nu {}".format(cost))
 
-cost = computeCost(res_Theta1, res_Theta2, X, y) 
-print ("De kosten die gemoeid zijn met de huidige waarden van Theta1 en Theta2 zijn {}".format(cost))
-print ("Dit zou een stuk lager moeten zijn dan in het begin.")
+# cost = computeCost(res_Theta1, res_Theta2, X, y) 
+# print ("De kosten die gemoeid zijn met de huidige waarden van Theta1 en Theta2 zijn {}".format(cost))
+# print ("Dit zou een stuk lager moeten zijn dan in het begin.")
 
-pred = np.argmax(predictNumber(res_Theta1,res_Theta2,X), axis=1)+1
-pred = pred.reshape(m,1)
-acc = np.count_nonzero([pred - y == 0])
-print ("correct geclassificeerd: {}".format(acc))
-print ("De huidige accuratessse van het netwerk is {} %".format(100 * acc/ m))
-print ("Dat zou een stuk hoger moeten zijn dan in het begin.")
-print ("Plotten van de waarden van de gewichten in de verborgen laag (hidden layer)")
+# pred = np.argmax(predictNumber(res_Theta1,res_Theta2,X), axis=1)+1
+# pred = pred.reshape(m,1)
+# acc = np.count_nonzero([pred - y == 0])
+# print ("correct geclassificeerd: {}".format(acc))
+# print ("De huidige accuratessse van het netwerk is {} %".format(100 * acc/ m))
+# print ("Dat zou een stuk hoger moeten zijn dan in het begin.")
+# print ("Plotten van de waarden van de gewichten in de verborgen laag (hidden layer)")
 
-displayData(res_Theta1[:,1:]) 
+# displayData(res_Theta1[:,1:]) 
