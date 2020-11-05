@@ -8,10 +8,11 @@ def plotImage(img, label):
     # Deze methode krijgt een matrix mee (in img) en een label dat correspondeert met het 
     # plaatje dat in de matrix is weergegeven. Zorg ervoor dat dit grafisch wordt weergegeven.
     # Maak gebruik van plt.cm.binary voor de cmap-parameter van plt.imgshow.
-
-    # YOUR CODE HERE
-
-    pass
+    
+    fig, ax = plt.subplots()
+    ax.imshow(img)
+    ax.set_xlabel(label)
+    plt.show()
 
 
 # OPGAVE 1b
@@ -21,9 +22,9 @@ def scaleData(X):
     # alle maximal waarde die in de matrix voorkomt.
     # Deel alle elementen in de matrix 'element wise' door de grootste waarde in deze matrix.
 
-    # YOUR CODE HERE
+    maximum = np.amax(X)
+    return X / maximum 
 
-    pass
 
 # OPGAVE 1c
 def buildModel():
@@ -35,9 +36,23 @@ def buildModel():
     # output-laag. Compileer het netwerk vervolgens met de gegevens die in opgave gegeven zijn
     # en retourneer het resultaat.
 
-    model = None
+    # laag 1: plaatjes van 28×28 omzet in 784 inputnodes
+    # laag 2: een tweede laag van 128 nodes die volledig verbonden is met de input-laag
+    # laag 3: tien output-nodes
 
-    # YOUR CODE HERE
+    model = keras.Sequential(
+        [
+            keras.layers.Dense(784, activation="relu", input_shape=(28*28,)),
+            keras.layers.Dense(128, activation="relu"),
+            keras.layers.Dense(10, activation="softmax"),
+        ]
+    )
+
+    model.compile(
+        optimizer="adam",
+        loss="sparse_categorical_crossentropy",
+        metrics=["accuracy"]
+    )
 
     return model
 
@@ -47,7 +62,7 @@ def confMatrix(labels, pred):
     # Retourneer de econfusion matrix op basis van de gegeven voorspelling (pred) en de actuele
     # waarden (labels). Check de documentatie van tf.math.confusion_matrix
     
-    # YOUR CODE HERE
+    return tf.math.confusion_matrix(labels, pred)
     
 
 # OPGAVE 2b
@@ -63,6 +78,7 @@ def confEls(conf, labels):
     # Check de documentatie van numpy diagonal om de eerste waarde te bepalen.
  
     # YOUR CODE HERE
+    pass
 
 # OPGAVE 2c
 def confData(metrics):
