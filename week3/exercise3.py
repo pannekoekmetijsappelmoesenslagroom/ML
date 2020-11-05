@@ -48,8 +48,8 @@ print (scaleData(X))
 print ("Het resultaat zou gelijk moeten zijn aan:")
 print (r)
 
-train_images = scaleData(train_images)
-test_images = scaleData(test_images)
+train_images = scaleData(train_images.reshape((60_000, 28*28)))
+test_images = scaleData(test_images.reshape((10_000, 28*28)))
 
 
 # ===============  OPGAVE 1c ======================
