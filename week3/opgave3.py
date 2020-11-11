@@ -1,5 +1,7 @@
 from tensorflow import keras
 import tensorflow as tf
+import numpy as np
+import matplotlib.pyplot as plt
 
 # https://www.tensorflow.org/tutorials/images/classification
 
@@ -34,13 +36,7 @@ validation_dataset = keras.preprocessing.image_dataset_from_directory(
     interpolation="bilinear",
 )
 
-AUTOTUNE = tf.data.experimental.AUTOTUNE
-
-train_ds = train_dataset.cache().shuffle(1000).prefetch(buffer_size=AUTOTUNE)
-val_ds = validation_dataset.cache().prefetch(buffer_size=AUTOTUNE)
-
 class_names = train_dataset.class_names
-print(class_names)
 num_classes = len(class_names)
 
 model = keras.Sequential(
@@ -69,3 +65,15 @@ model.summary()
 
 
 model.fit(train_dataset, validation_data=validation_dataset, epochs=10)
+
+predictions = np.argmax(model.predict(validation_dataset), axis=1)
+
+print(class_names)
+
+y = np.concatenate([y for x, y in validation_dataset], axis=0)
+
+cf = tf.math.confusion_matrix(labels=y, predictions=predictions).numpy()
+
+plt.figure()
+plt.matshow(cf)
+plt.show()
